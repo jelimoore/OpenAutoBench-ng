@@ -133,7 +133,7 @@ build-release-macos-arm64:
   script:
     - dotnet publish -r osx-arm64 -c Release
     - cd OpenAutoBench-ng/bin/Release/net6.0/osx-arm64/publish
-     - "echo ${ENTITLEMENTS_DATA} > entitlements.plist"
+    - "echo ${ENTITLEMENTS_DATA} > entitlements.plist"
     - "codesign --force --verbose --timestamp --sign \"${APPLE_CERT_NAME}\" --options=runtime --entitlements entitlements.plist OpenAutoBench-ng"
     - "codesign --force --verbose --timestamp --sign \"${APPLE_CERT_NAME}\" --options=runtime --entitlements entitlements.plist libSystem.IO.Ports.Native.dylib"
 #    - ditto -c --sequesterRsrc -k -V OpenAutoBench-ng libSystem.IO.Ports.Native.dylib application.zip
