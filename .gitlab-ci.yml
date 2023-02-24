@@ -114,7 +114,8 @@ build-release-macos-x64:
     - "echo ${ENTITLEMENTS_DATA} > entitlements.plist"
     - "codesign --force --verbose --timestamp --sign \"${APPLE_CERT_NAME}\" --options=runtime --entitlements entitlements.plist OpenAutoBench-ng"
     - "codesign --force --verbose --timestamp --sign \"${APPLE_CERT_NAME}\" --options=runtime --entitlements entitlements.plist libSystem.IO.Ports.Native.dylib"
-    - ditto -c --sequesterRsrc -k -V OpenAutoBench-ng libSystem.IO.Ports.Native.dylib application.zip
+#    - ditto -c --sequesterRsrc -k -V OpenAutoBench-ng libSystem.IO.Ports.Native.dylib application.zip
+    - zip application.zip OpenAutoBench-ng libSystem.IO.Ports.Native.dylib
     - "xcrun notarytool submit application.zip --wait --apple-id ${NOTARIZATION_APPLE_ID} --password ${NOTARIZATION_PASSWORD} --team-id ${TEAM_ID} --output-format json"
 
   artifacts:
@@ -135,7 +136,8 @@ build-release-macos-arm64:
      - "echo ${ENTITLEMENTS_DATA} > entitlements.plist"
     - "codesign --force --verbose --timestamp --sign \"${APPLE_CERT_NAME}\" --options=runtime --entitlements entitlements.plist OpenAutoBench-ng"
     - "codesign --force --verbose --timestamp --sign \"${APPLE_CERT_NAME}\" --options=runtime --entitlements entitlements.plist libSystem.IO.Ports.Native.dylib"
-    - ditto -c --sequesterRsrc -k -V OpenAutoBench-ng libSystem.IO.Ports.Native.dylib application.zip
+#    - ditto -c --sequesterRsrc -k -V OpenAutoBench-ng libSystem.IO.Ports.Native.dylib application.zip
+    - zip application.zip OpenAutoBench-ng libSystem.IO.Ports.Native.dylib
     - "xcrun notarytool submit application.zip --wait --apple-id ${NOTARIZATION_APPLE_ID} --password ${NOTARIZATION_PASSWORD} --team-id ${TEAM_ID} --output-format json"
   artifacts:
     name: release-macos-arm64
