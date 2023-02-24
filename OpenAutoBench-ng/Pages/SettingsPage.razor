@@ -1,0 +1,199 @@
+﻿@page "/settings"
+
+<PageTitle>Settings</PageTitle>
+
+@using OpenAutoBench_ng.OpenAutoBench
+@using Microsoft.Extensions.Logging
+@inject ILogger<SettingsPage> Logger
+@inject IToastService toastService
+
+<h1>Settings</h1>
+
+<p>Adjust OpenAutoBench settings.</p>
+
+<EditForm EditContext="@editContext" OnSubmit="@HandleSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <p>
+        <label>
+            Instrument Connection:
+            <InputSelect @bind-Value="settings.InstrumentConnectionType">
+                @foreach (var types in Enum.GetValues<Settings.InstrumentConnectionTypeEnum>())
+                {
+                    <option value="@types">@types</option>
+                }
+            </InputSelect>
+        </label>
+    </p>
+
+    <p>
+        <label>
+            Instrument connected over GPIB?:
+            <InputCheckbox @bind-Value="settings.IsGPIB">
+            </InputCheckbox>
+        </label>
+    </p>
+
+    <div hidden="@(!(settings.IsGPIB))">
+    <p>
+        <label>
+            Instrument GPIB Address:
+            <InputNumber @bind-Value="settings.InstrumentGPIBAddress">
+            </InputNumber>
+        </label>
+    </p>
+    </div>
+
+    <div hidden="@(!(settings.InstrumentConnectionType == Settings.InstrumentConnectionTypeEnum.Serial))">
+    <p>
+        <label>
+            Instrument Serial Port:
+                <InputSelect @bind-Value="settings.InstrumentSerialPort">
+            @foreach (var port in ports)
+            {
+                <option value="@port">@port</option>
+            }
+        </InputSelect>
+        </label>
+    </p>
+
+        <p>
+            <label>
+                Instrument Baudrate:
+                <InputNumber @bind-Value="settings.InstrumentBaudrate">
+                </InputNumber>
+            </label>
+        </p>
+    </div>
+
+    <div hidden="@(!(settings.InstrumentConnectionType == Settings.InstrumentConnectionTypeEnum.IP))">
+    <p>
+        <label>
+            Instrument IP Address:
+            <InputText @bind-Value="settings.InstrumentIPAddress">
+            </InputText>
+        </label>
+    </p>
+
+    <p>
+        <label>
+            Instrument IP Port:
+            <InputNumber @bind-Value="settings.InstrumentIPPort">
+            </InputNumber>
+        </label>
+    </p>
+    </div>
+
+    <p>
+
+        <label>
+            Instrument Type:
+            <InputSelect @bind-Value="settings.InstrumentType">
+                @foreach (var types in Enum.GetValues<Settings.InstrumentTypeEnum>())
+                {
+                    <option value="@types">@types</option>
+                }
+            </InputSelect>
+        </label>
+    </p>
+
+    <p>
+        <label><Tooltip Text="MotoTRBO ADK keys are property of Motorola Solutions and not included with this program. Specify in hex, with leading 0x.">MotoTRBO Keys:</Tooltip>
+            <label>
+                0: <InputText @bind-Value="TrboKey0">
+                </InputText>
+            </label>
+            <label>
+                1: <InputText @bind-Value="TrboKey1">
+                </InputText>
+            </label>
+            <label>
+                2: <InputText @bind-Value="TrboKey2">
+                </InputText>
+            </label>
+            <label>
+                3: <InputText @bind-Value="TrboKey3">
+                </InputText>
+            </label>
+            
+        </label>
+    </p>
+
+    <p>
+        <label>
+            <Tooltip Text="MotoTRBO ADK keys are property of Motorola Solutions and not included with this program. Specify in hex, with leading 0x.">MotoTRBO Delta:</Tooltip>
+            <InputText @bind-Value="TrboKey4">
+            </InputText>
+        </label>
+    </p>
+    
+
+    <p>
+        <label>
+            Danger Mode:
+            <InputCheckbox @bind-Value="settings.DangerMode">
+            </InputCheckbox>
+        </label>
+    </p>
+
+    <div hidden="@(!settings.DangerMode)">
+        <p class="alert alert-danger">Danger mode enabled! Take care when adjusting these settings.</p>
+        <p>
+            <label>
+                <Tooltip Text="Disables specific model checking in each test.">Disable Model Checking:</Tooltip>
+                <InputCheckbox @bind-Value="settings.DisableModelChecking">
+                </InputCheckbox>
+            </label>
+        </p>
+        
+    </div>
+    
+
+
+    <button class="btn btn-success" type="submit">Submit</button>
+
+</EditForm>
+
+
+@code {
+    private string[]? ports;
+    private Settings settings;
+    private Preferences prefs = new Preferences();
+    private EditContext? editContext;
+
+    private string TrboKey0 = "0";
+    private string TrboKey1 = "0";
+    private string TrboKey2 = "0";
+    private string TrboKey3 = "0";
+    private string TrboKey4 = "0";
+
+    protected override async Task OnInitializedAsync()
+    {
+        settings = prefs.Load();
+        ports = MainLogic.GetSerialPorts();
+        editContext = new(settings);
+
+    }
+
+    private async Task HandleSubmit()
+    {
+        Logger.LogInformation("HandleValidSubmit called");
+        try
+        {
+            settings.MotoTrboKeys[0] = Convert.ToInt32(TrboKey0, 16);
+            settings.MotoTrboKeys[1] = Convert.ToInt32(TrboKey1, 16);
+            settings.MotoTrboKeys[2] = Convert.ToInt32(TrboKey2, 16);
+            settings.MotoTrboKeys[3] = Convert.ToInt32(TrboKey3, 16);
+            settings.MotoTrboDelta = Convert.ToInt32(TrboKey4, 16);
+            prefs.Save(settings);
+            toastService.ShowSuccess("Settings successfully saved.");
+        }
+        catch (Exception e)
+        {
+            toastService.ShowError("Error saving settings.");
+            Logger.LogError("Received exception {0}", e);
+        }
+        
+    }
+}
