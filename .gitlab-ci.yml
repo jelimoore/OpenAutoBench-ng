@@ -112,8 +112,8 @@ build-release-macos-x64:
     - dotnet publish -r osx-x64 -c Release
     - cd OpenAutoBench-ng/bin/Release/net6.0/osx-x64/publish
     - "echo ${ENTITLEMENTS_DATA} > entitlements.plist"
-    - "codesign --force --verbose --timestamp --sign \"${APPLE_CERT_NAME}\" --options=runtime --entitlements entitlements.plist OpenAutoBench-ng"
     - "codesign --force --verbose --timestamp --sign \"${APPLE_CERT_NAME}\" --options=runtime --entitlements entitlements.plist libSystem.IO.Ports.Native.dylib"
+    - "codesign --force --verbose --timestamp --sign \"${APPLE_CERT_NAME}\" --options=runtime --entitlements entitlements.plist OpenAutoBench-ng"
 #    - ditto -c --sequesterRsrc -k -V OpenAutoBench-ng libSystem.IO.Ports.Native.dylib application.zip
     - zip application.zip OpenAutoBench-ng libSystem.IO.Ports.Native.dylib
     - "xcrun notarytool submit application.zip --wait --apple-id ${NOTARIZATION_APPLE_ID} --password ${NOTARIZATION_PASSWORD} --team-id ${TEAM_ID} --output-format json"
@@ -134,8 +134,8 @@ build-release-macos-arm64:
     - dotnet publish -r osx-arm64 -c Release
     - cd OpenAutoBench-ng/bin/Release/net6.0/osx-arm64/publish
     - "echo ${ENTITLEMENTS_DATA} > entitlements.plist"
-    - "codesign --force --verbose --timestamp --sign \"${APPLE_CERT_NAME}\" --options=runtime --entitlements entitlements.plist OpenAutoBench-ng"
     - "codesign --force --verbose --timestamp --sign \"${APPLE_CERT_NAME}\" --options=runtime --entitlements entitlements.plist libSystem.IO.Ports.Native.dylib"
+    - "codesign --force --verbose --timestamp --sign \"${APPLE_CERT_NAME}\" --options=runtime --entitlements entitlements.plist OpenAutoBench-ng"
 #    - ditto -c --sequesterRsrc -k -V OpenAutoBench-ng libSystem.IO.Ports.Native.dylib application.zip
     - zip application.zip OpenAutoBench-ng libSystem.IO.Ports.Native.dylib
     - "xcrun notarytool submit application.zip --wait --apple-id ${NOTARIZATION_APPLE_ID} --password ${NOTARIZATION_PASSWORD} --team-id ${TEAM_ID} --output-format json"
