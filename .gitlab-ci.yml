@@ -135,7 +135,7 @@ build-release-macos-arm64:
     - cat entitlements.plist
     - "codesign --force --verbose --timestamp --sign \"${APPLE_CERT_NAME}\" --options=runtime --entitlements entitlements.plist OpenAutoBench-ng"
     - ditto -c --sequesterRsrc -k -V OpenAutoBench-ng application.zip
-    - "xcrun notarytool submit application.zip --wait --apple-id \"${NOTARIZATION_APPLE_ID}\" --password \"${NOTARIZATION_PASSWORD}\ --team-id ${TEAM_ID} --output-format json"
+    - "xcrun notarytool submit application.zip --wait --apple-id \"${NOTARIZATION_APPLE_ID}\" --password \"${NOTARIZATION_PASSWORD}\" --team-id ${TEAM_ID} --output-format json"
   artifacts:
     name: release-macos-arm64
     public: false
