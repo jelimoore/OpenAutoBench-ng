@@ -113,6 +113,7 @@ build-release-macos-x64:
     - cd OpenAutoBench-ng/bin/Release/net6.0/osx-x64/publish
     - "echo ${ENTITLEMENTS_DATA} > entitlements.plist"
     - "codesign --force --verbose --timestamp --sign \"${APPLE_CERT_NAME}\" --options=runtime --entitlements entitlements.plist OpenAutoBench-ng"
+    - ditto -c --sequesterRsrc -k -V OpenAutoBench-ng application.zip
     - "xcrun notarytool submit application.zip --wait --apple-id ${NOTARIZATION_APPLE_ID} --password ${NOTARIZATION_PASSWORD} --team-id ${TEAM_ID} --output-format json"
 
   artifacts:
@@ -133,6 +134,7 @@ build-release-macos-arm64:
     - "echo ${ENTITLEMENTS_DATA} > entitlements.plist"
     - cat entitlements.plist
     - "codesign --force --verbose --timestamp --sign \"${APPLE_CERT_NAME}\" --options=runtime --entitlements entitlements.plist OpenAutoBench-ng"
+    - ditto -c --sequesterRsrc -k -V OpenAutoBench-ng application.zip
     - "xcrun notarytool submit application.zip --wait --apple-id \"${NOTARIZATION_APPLE_ID}\" --password \"${NOTARIZATION_PASSWORD}\ --team-id ${TEAM_ID} --output-format json"
   artifacts:
     name: release-macos-arm64
