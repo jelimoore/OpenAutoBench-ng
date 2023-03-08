@@ -6,6 +6,7 @@
 @using OpenAutoBench_ng.Communication.Radio.Motorola.XCMPRadioBase
 @using OpenAutoBench_ng.OpenAutoBench
 @using System.IO.Ports
+@inject Microsoft.JSInterop.IJSRuntime JS
 
 <PageTitle>APX</PageTitle>
 
@@ -32,6 +33,7 @@
 <button class="btn btn-primary" disabled=@NotConnected @onclick ="@OnAlnBegin">Begin Alignment</button>
 <button class="btn btn-secondary" disabled=@NotConnected @onclick ="@OnTestBegin">Begin Test</button>
 
+<button class="btn btn-success" @onclick="@SavePDF">Save PDF</button>
 <br />
 
 <pre><code>@((MarkupString)TestOutput)</code></pre>
@@ -125,7 +127,7 @@
             radio.Disconnect();
             await instrument.Disconnect();
         }
-        
+
 
         DateTime endTime = DateTime.Now;
         updateOutput("Completed tests at " + endTime.ToString("HH:mm:ss tt"));
@@ -148,5 +150,13 @@
     protected override async Task OnInitializedAsync()
     {
         ports = SerialPort.GetPortNames();
+    }
+
+    private async Task SavePDF()
+    {
+        using (MemoryStream excelStream = MainLogic.GeneratePdf(TestOutput))
+        {
+            await JS.InvokeAsync<object>("saveAsFile", "TestReport.pdf", Convert.ToBase64String(excelStream.ToArray()));
+        }
     }
 }

@@ -6,6 +6,10 @@ using OpenAutoBench_ng.Communication.Instrument.IFR_2975;
 using System;
 using System.IO.Ports;
 using System.ComponentModel;
+using PdfSharp.Pdf;
+using PdfSharp;
+using PdfSharp.Pdf.IO;
+using PdfSharp.Drawing;
 
 namespace OpenAutoBench_ng.OpenAutoBench
 {
@@ -103,6 +107,28 @@ namespace OpenAutoBench_ng.OpenAutoBench
                     throw new Exception("Unsupported instrument somehow selected. Dying.");
             }
             return instrument;
+        }
+
+        public static MemoryStream GeneratePdf(string text)
+        {
+            using (PdfDocument pdfDocument = new PdfDocument())
+            {
+                int paragraphAfterSpacing = 8;
+                
+                PdfPage page = pdfDocument.Pages.Add();
+                XGraphics gfx = XGraphics.FromPdfPage(page);
+                XFont font = new XFont("Times New Roman", 12);
+                gfx.DrawString("Hello World", font, XBrushes.Black,
+                    new XRect(0, 0, page.Width, page.Height),
+                    XStringFormats.TopLeft);
+
+                using (MemoryStream stream = new MemoryStream())
+                {
+                    pdfDocument.Save(stream);
+                    pdfDocument.Close();
+                    return stream;
+                }
+            }
         }
     }
 }
