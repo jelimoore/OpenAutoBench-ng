@@ -6,6 +6,7 @@
 @using OpenAutoBench_ng.Communication.Radio.Motorola.XCMPRadioBase
 @using OpenAutoBench_ng.OpenAutoBench
 @using System.IO.Ports
+@inject Microsoft.JSInterop.IJSRuntime JS
 
 <PageTitle>Astro25</PageTitle>
 
@@ -44,6 +45,7 @@
 <button class="btn btn-primary" disabled=@NotConnected @onclick ="@OnAlnBegin">Begin Alignment</button>
 <button class="btn btn-secondary" @onclick ="@OnTestBegin">Begin Test</button>
 
+<button class="btn btn-success" @onclick="@SavePDF">Save PDF</button>
 <br />
 
 <pre><code>@((MarkupString)TestOutput)</code></pre>
@@ -161,5 +163,14 @@
     protected override async Task OnInitializedAsync()
     {
         ports = SerialPort.GetPortNames();
+    }
+
+    private async Task SavePDF()
+    {
+        using (MemoryStream excelStream = MainLogic.GeneratePdf(TestOutput.Replace("<br>", "\n")))
+        {
+            string fileName = $"TestReport - {radio?.SerialNumber}.pdf";
+            await JS.InvokeAsync<object>("saveAsFile", fileName, Convert.ToBase64String(excelStream.ToArray()));
+        }
     }
 }

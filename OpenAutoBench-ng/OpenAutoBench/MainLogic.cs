@@ -6,10 +6,11 @@ using OpenAutoBench_ng.Communication.Instrument.IFR_2975;
 using System;
 using System.IO.Ports;
 using System.ComponentModel;
-using PdfSharp.Pdf;
-using PdfSharp;
-using PdfSharp.Pdf.IO;
-using PdfSharp.Drawing;
+using PdfSharpCore.Pdf;
+using PdfSharpCore;
+using PdfSharpCore.Pdf.IO;
+using PdfSharpCore.Drawing;
+using PdfSharpCore.Drawing.Layout;
 
 namespace OpenAutoBench_ng.OpenAutoBench
 {
@@ -118,9 +119,9 @@ namespace OpenAutoBench_ng.OpenAutoBench
                 PdfPage page = pdfDocument.Pages.Add();
                 XGraphics gfx = XGraphics.FromPdfPage(page);
                 XFont font = new XFont("Times New Roman", 12);
-                gfx.DrawString("Hello World", font, XBrushes.Black,
-                    new XRect(0, 0, page.Width, page.Height),
-                    XStringFormats.TopLeft);
+                XRect rect = new XRect(50, 50, page.Width - 50, page.Height - 50);
+                XTextFormatter tf = new XTextFormatter(gfx);
+                tf.DrawString(text, font, XBrushes.Black, rect, XStringFormats.TopLeft);
 
                 using (MemoryStream stream = new MemoryStream())
                 {

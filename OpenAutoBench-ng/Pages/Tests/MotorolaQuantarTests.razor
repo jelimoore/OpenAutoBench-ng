@@ -4,6 +4,7 @@
 @using OpenAutoBench_ng.Communication.Instrument
 @using OpenAutoBench_ng.OpenAutoBench
 @using System.IO.Ports
+@inject Microsoft.JSInterop.IJSRuntime JS
 
 <PageTitle>Quantar</PageTitle>
 
@@ -37,6 +38,8 @@
 
 <button class="btn btn-primary" disabled=@NotConnected @onclick ="@OnAlnBegin">Begin Alignment</button>
 <button class="btn btn-secondary" disabled=@NotConnected @onclick ="@OnTestBegin">Begin Test</button>
+
+<button class="btn btn-success" @onclick="@SavePDF">Save PDF</button>
 
 <br />
 
@@ -149,5 +152,14 @@
     protected override async Task OnInitializedAsync()
     {
         ports = SerialPort.GetPortNames();
+    }
+
+    private async Task SavePDF()
+    {
+        using (MemoryStream excelStream = MainLogic.GeneratePdf(TestOutput.Replace("<br>", "\n")))
+        {
+            string fileName = $"TestReport - {radio?.SerialNumber}.pdf";
+            await JS.InvokeAsync<object>("saveAsFile", fileName, Convert.ToBase64String(excelStream.ToArray()));
+        }
     }
 }

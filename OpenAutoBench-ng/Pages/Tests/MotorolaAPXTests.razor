@@ -106,6 +106,7 @@
 
         updateOutput("Beginning tests at " + startTime.ToString("HH:mm:ss tt"));
         updateOutput("=====================================");
+        updateOutput("");
 
         await ConnectRadio();
 
@@ -154,9 +155,10 @@
 
     private async Task SavePDF()
     {
-        using (MemoryStream excelStream = MainLogic.GeneratePdf(TestOutput))
+        using (MemoryStream excelStream = MainLogic.GeneratePdf(TestOutput.Replace("<br>", "\n")))
         {
-            await JS.InvokeAsync<object>("saveAsFile", "TestReport.pdf", Convert.ToBase64String(excelStream.ToArray()));
+            string fileName = $"TestReport - {radio?.SerialNumber}.pdf";
+            await JS.InvokeAsync<object>("saveAsFile", fileName, Convert.ToBase64String(excelStream.ToArray()));
         }
     }
 }
