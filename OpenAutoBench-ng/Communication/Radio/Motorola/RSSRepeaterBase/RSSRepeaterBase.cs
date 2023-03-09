@@ -148,7 +148,12 @@ namespace OpenAutoBench_ng.Communication.Radio.Motorola.RSSRepeaterBase
 
             if (testParams.doDeviationTest)
             {
-                testParams.callback("Did deviation test");
+                MotorolaRSSRepeater_TestTX_Deviation test = new MotorolaRSSRepeater_TestTX_Deviation(testParams);
+                await test.setup();
+                await Task.Delay(1000);
+                await test.performTest();
+                await Task.Delay(1000);
+                await test.teardown();
             }
 
             await Task.Delay(1000);
