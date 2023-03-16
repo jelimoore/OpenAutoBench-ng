@@ -79,7 +79,7 @@ namespace OpenAutoBench_ng.Communication.Radio.Motorola.RSSRepeaterBase
                 {
                     // we found the end of a command
                     ReplyBuffer.Add(System.Text.Encoding.UTF8.GetString(PacketBuffer.ToArray()));
-                    Console.WriteLine($"Got {System.Text.Encoding.UTF8.GetString(PacketBuffer.ToArray())}");
+                    //Console.WriteLine($"Got {System.Text.Encoding.UTF8.GetString(PacketBuffer.ToArray())}");
                     HasData = true;
                     PacketBuffer.Clear();
                 }
