@@ -45,14 +45,14 @@ namespace OpenAutoBench_ng.Communication.Radio.Motorola.RSSRepeaterBase
 
         public async Task performTest()
         {
-            //await Repeater.Send("SET TX PWR 100");
+            await Repeater.Send("SET TX PWR 100");
             Instrument.SetRxFrequency(TXFrequency);
             Repeater.Keyup();
             await Task.Delay(5000);
             float measPower = await Instrument.MeasurePower();
             Repeater.Dekey();
             measPower = (float) Math.Round(measPower, 2);
-            LogCallback(String.Format("Measured power at {0}MHz: {1}w", (TXFrequency / 1000000F), measPower));
+            LogCallback(String.Format("Measured power at {0}MHz: {1}w (expected 100W)", (TXFrequency / 1000000D), measPower));
         }
 
         public async Task performAlignment()
