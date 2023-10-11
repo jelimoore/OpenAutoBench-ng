@@ -18,13 +18,13 @@ namespace OpenAutoBench_ng.Communication.Radio.Motorola.RSSRepeaterBase
 
         private Action<string> LogCallback;
 
-        protected RSSRepeaterBase Repeater;
+        protected MotorolaRSSRepeaterBase Repeater;
 
         // private vars specific to test
 
         private int TXFrequency;
 
-        public MotorolaRSSRepeater_TestTX_Power(RSSRepeaterBaseTestParams testParams)
+        public MotorolaRSSRepeater_TestTX_Power(MotorolaRSSRepeaterBaseTestParams testParams)
         {
             LogCallback = testParams.callback;
             Repeater = testParams.radio;

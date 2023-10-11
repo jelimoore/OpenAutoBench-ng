@@ -46,25 +46,44 @@ namespace OpenAutoBench_ng.Communication.Instrument.HP_8900
             Connection.Disconnect();
         }
 
-        public void GenerateSignal(float power)
+        public async Task GenerateSignal(float power)
         {
-            Send("RFG:AMPL " + power.ToString());
+            await Send("RFG:AMPL " + power.ToString());
         }
 
-        public void GenerateFMSignal(float power, float afFreq)
+        public async Task GenerateFMSignal(float power, float afFreq)
         {
-            GenerateSignal(power);
-            //todo: add FM frequency
+            await GenerateSignal(power);
+            throw new NotImplementedException();
         }
 
-        public void SetRxFrequency(int frequency)
+        public async Task StopGenerating()
         {
-            Transmit(string.Format("RFAN:FREQ {0}", frequency.ToString()));
+            await Send("RFG:AMPL:STAT 0");
         }
 
-        public void SetTxFrequency(int frequency)
+        public async Task SetGenPort(InstrumentOutputPort outputPort)
         {
-            Send("RFG:FREQ " + frequency.ToString());
+            switch (outputPort)
+            {
+                case InstrumentOutputPort.RF_IN_OUT:
+                    await Send("RFG:OUTP 'RF Out'");
+                    break;
+
+                case InstrumentOutputPort.DUPLEX_OUT:
+                    await Send("RFG:OUTP DUPL");
+                    break;
+            }
+        }
+
+        public async Task SetRxFrequency(int frequency)
+        {
+            await Transmit(string.Format("RFAN:FREQ {0}", frequency.ToString()));
+        }
+
+        public async Task SetTxFrequency(int frequency)
+        {
+            await Send("RFG:FREQ " + frequency.ToString());
         }
 
         public async Task<float> MeasurePower()

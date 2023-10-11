@@ -8,25 +8,14 @@ namespace OpenAutoBench_ng.Communication.Instrument.GeneralDynamics_R2670
 
         public bool Connected { get; private set; }
 
-        public bool SupportsP25 { get { return true; } }
+        public bool SupportsP25 { get { return false; } }
 
         public bool SupportsDMR { get { return false; } }
 
-        private int GPIBAddr;
         public GeneralDynamics_R2670Instrument(IInstrumentConnection conn, int addr)
         {
             Connected = false;
             Connection = conn;
-        }
-
-        private async Task<string> Send(string command)
-        {
-            return await Connection.Send(command);
-        }
-
-        private async Task Transmit(string command)
-        {
-            await Connection.Transmit(command);
         }
 
         public async Task Connect()
@@ -39,24 +28,34 @@ namespace OpenAutoBench_ng.Communication.Instrument.GeneralDynamics_R2670
             Connection.Disconnect();
         }
 
-        public void GenerateSignal(float power)
+        public async Task GenerateSignal(float power)
         {
             throw new NotImplementedException();
         }
 
-        public void GenerateFMSignal(float power, float afFreq)
+        public async Task GenerateFMSignal(float power, float afFreq)
         {
-            GenerateSignal(power);
-            //todo: add FM frequency
+            //GenerateSignal(power);
+            throw new NotImplementedException();
         }
 
-        public void SetRxFrequency(int frequency)
+        public Task StopGenerating()
+        { 
+            throw new NotImplementedException();
+        }
+
+        public async Task SetGenPort(InstrumentOutputPort outputPort)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task SetRxFrequency(int frequency)
         {
             // RM command
             throw new NotImplementedException();
         }
 
-        public void SetTxFrequency(int frequency)
+        public async Task SetTxFrequency(int frequency)
         {
             throw new NotImplementedException();
         }
@@ -64,19 +63,25 @@ namespace OpenAutoBench_ng.Communication.Instrument.GeneralDynamics_R2670
         public async Task<float> MeasurePower()
         {
             // MR command, pg. 106
-            throw new NotImplementedException();
+            await Transmit("MR 0");
+            string[] results = await ReadMRReadings();
+            return float.Parse(results[1]);
         }
 
         public async Task<float> MeasureFrequencyError()
         {
             // MR command, pg. 106
-            throw new NotImplementedException();
+            await Transmit("MR 0");
+            string[] results = await ReadMRReadings();
+            return float.Parse(results[0]);
         }
 
         public async Task<float> MeasureFMDeviation()
         {
             // MR command, pg. 106
-            throw new NotImplementedException();
+            await Transmit("MR 0");
+            string[] results = await ReadMRReadings();
+            return float.Parse(results[1]);
         }
 
         public async Task<string> GetInfo()
@@ -117,6 +122,46 @@ namespace OpenAutoBench_ng.Communication.Instrument.GeneralDynamics_R2670
         public Task ResetBERErrors()
         {
             throw new NotImplementedException();
+        }
+
+        /**
+         * PRIVATE METHODS
+         */
+
+        private async Task<string> Send(string command)
+        {
+            return await Connection.Send(command);
+        }
+
+        private async Task Transmit(string command)
+        {
+            await Connection.Transmit(command);
+        }
+
+        private async Task<string> ReadLine()
+        {
+            return await Connection.ReadLine();
+        }
+
+        /// <summary>
+        /// Parses the four lines of data from the 2670
+        /// </summary>
+        /// <returns>
+        /// Array of strings.
+        /// Index 0: Frequency Error;
+        /// Index 1: Power;
+        /// Index 2: Deviation Positive;
+        /// Index 3: Deviation Negative
+        /// </returns>
+        private async Task<string[]> ReadMRReadings()
+        {
+            List<string> valList = new List<string>();
+            for (int i=0; i<4; i++)
+            {
+                string val = await ReadLine();
+                valList.Add(val);
+            }
+            return valList.ToArray();
         }
     }
 }

@@ -3,7 +3,7 @@ using OpenAutoBench_ng.Communication.Instrument;
 
 namespace OpenAutoBench_ng.Communication.Radio.Motorola.RSSRepeaterBase
 {
-    public class RSSRepeaterBaseTestParams
+    public class MotorolaRSSRepeaterBaseTestParams
     {
         public bool doRefoscTest = true;
         public bool doPowerTest = true;
@@ -12,9 +12,9 @@ namespace OpenAutoBench_ng.Communication.Radio.Motorola.RSSRepeaterBase
 
         public IBaseInstrument? instrument;
         public Action<string>? callback;
-        public RSSRepeaterBase? radio;
+        public MotorolaRSSRepeaterBase? radio;
 
-        public RSSRepeaterBaseTestParams()
+        public MotorolaRSSRepeaterBaseTestParams()
         {
         }
 

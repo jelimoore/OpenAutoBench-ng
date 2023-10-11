@@ -10,6 +10,8 @@
 
         public Task Transmit(string toSend);
 
+        public Task<string> ReadLine();
+
         public Task TransmitByte(byte[] toSend);
 
         public Task<byte[]> ReceiveByte();

@@ -41,25 +41,35 @@ namespace OpenAutoBench_ng.Communication.Instrument.IFR_2975
             Connection.Disconnect();
         }
 
-        public void GenerateSignal(float power)
+        public async Task GenerateSignal(float power)
+        {
+            Send($"Generator RFLEVel {power.ToString()}");
+        }
+
+        public async Task GenerateFMSignal(float power, float afFreq)
+        {
+            GenerateSignal(power);
+            Send("Generator MODulation 1");
+        }
+
+        public Task StopGenerating()
         {
             throw new NotImplementedException();
         }
 
-        public void GenerateFMSignal(float power, float afFreq)
+        public async Task SetGenPort(InstrumentOutputPort outputPort)
         {
-            GenerateSignal(power);
-            //todo: add FM frequency
+            throw new NotImplementedException();
         }
 
-        public void SetRxFrequency(int frequency)
+        public async Task SetRxFrequency(int frequency)
         {
             Send($"Receiver FREQuency {frequency.ToString()} Hz");
         }
 
-        public void SetTxFrequency(int frequency)
+        public async Task SetTxFrequency(int frequency)
         {
-            //
+            Send($"Generator FREQuency {frequency.ToString()} Hz");
         }
 
         public async Task<float> MeasurePower()

@@ -4,7 +4,7 @@ using OpenAutoBench_ng.Communication.Radio.Motorola.RSSRepeaterBase;
 
 namespace OpenAutoBench_ng.Communication.Radio.Motorola.Quantar
 {
-    public class MotorolaQuantarTestParams : RSSRepeaterBaseTestParams
+    public class MotorolaQuantarTestParams : MotorolaRSSRepeaterBaseTestParams
     { 
         public MotorolaQuantarTestParams() : base()
         {

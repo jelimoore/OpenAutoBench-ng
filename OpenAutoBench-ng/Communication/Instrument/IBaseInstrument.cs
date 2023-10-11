@@ -9,12 +9,16 @@
         public bool SupportsDMR { get; }
         public Task Connect();
         public Task Disconnect();
-        public void GenerateSignal(float power);
-        public void GenerateFMSignal(float power, float afFreq);
+        public Task GenerateSignal(float power);
+        public Task GenerateFMSignal(float power, float afFreq);
 
-        public void SetRxFrequency(int frequency);
+        public Task StopGenerating();
 
-        public void SetTxFrequency(int frequency);
+        public Task SetGenPort(InstrumentOutputPort outputPort);
+
+        public Task SetRxFrequency(int frequency);
+
+        public Task SetTxFrequency(int frequency);
 
         public Task<float> MeasurePower();
 

@@ -1,15 +1,15 @@
 ﻿using OpenAutoBench_ng.Communication.Instrument;
-using OpenAutoBench_ng.Communication.Radio.Motorola.Quantar;
+using OpenAutoBench_ng.Communication.Radio.Motorola.RSSRepeaterBase;
 
-namespace OpenAutoBench_ng.Communication.Radio.Motorola.RSSRepeaterBase
+namespace OpenAutoBench_ng.Communication.Radio.Motorola.XCMPRadioBase
 {
-    public class MotorolaRSSRepeater_TestTX_ReferenceOscillator : IBaseTest
+    public class MotorolaXCMPRadio_TestRX_RSSI : IBaseTest
     {
         public string name
         {
             get
             {
-                return "TX: Reference Oscillator";
+                return "RX: RSSI";
             }
         }
 
@@ -17,20 +17,20 @@ namespace OpenAutoBench_ng.Communication.Radio.Motorola.RSSRepeaterBase
 
         public bool testCompleted { get; private set; }
 
-        private IBaseInstrument Instrument;
+        protected IBaseInstrument Instrument;
 
-        private Action<string> LogCallback;
+        protected Action<string> LogCallback;
 
-        private MotorolaRSSRepeaterBase Repeater;
+        protected MotorolaXCMPRadioBase Radio;
 
         // private vars specific to test
 
-        private int TXFrequency;
+        protected int TXFrequency;
 
-        public MotorolaRSSRepeater_TestTX_ReferenceOscillator(MotorolaRSSRepeaterBaseTestParams testParams)
+        public MotorolaXCMPRadio_TestRX_RSSI(XCMPRadioTestParams testParams)
         {
             LogCallback = testParams.callback;
-            Repeater = testParams.radio;
+            Radio = testParams.radio;
             Instrument = testParams.instrument;
         }
 
@@ -43,16 +43,18 @@ namespace OpenAutoBench_ng.Communication.Radio.Motorola.RSSRepeaterBase
         {
             LogCallback(String.Format("Setting up for {0}", name));
             await Instrument.SetDisplay("RFAN");
-            await Repeater.SetShell(MotorolaRSSRepeaterBase.Shell.RSS);
-            TXFrequency = await Repeater.GetTxFrequency();
+            await Task.Delay(1000);
+
+            // let child set frequency
         }
 
         public async Task performTest()
         {
             try
             {
-                Instrument.SetRxFrequency(TXFrequency);
-                Repeater.Keyup();
+                Radio.SetRXFrequency(TXFrequency, false);
+                Instrument.SetTxFrequency(TXFrequency);
+                Radio.Keyup();
                 await Task.Delay(5000);
                 float measErr = await Instrument.MeasureFrequencyError();
                 measErr = (float)Math.Round(measErr, 2);
@@ -65,9 +67,9 @@ namespace OpenAutoBench_ng.Communication.Radio.Motorola.RSSRepeaterBase
             }
             finally
             {
-                Repeater.Dekey();
+                Radio.Dekey();
             }
-            
+
         }
 
         public async Task performAlignment()

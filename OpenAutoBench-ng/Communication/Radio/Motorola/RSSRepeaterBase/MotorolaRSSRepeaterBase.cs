@@ -5,7 +5,7 @@ using System.IO.Ports;
 
 namespace OpenAutoBench_ng.Communication.Radio.Motorola.RSSRepeaterBase
 {
-    public class RSSRepeaterBase : IBaseRadio
+    public class MotorolaRSSRepeaterBase : IBaseRadio
     {
         public string Name { get; private set; }
 
@@ -30,7 +30,7 @@ namespace OpenAutoBench_ng.Communication.Radio.Motorola.RSSRepeaterBase
 
         private bool HasData = false;
 
-        public RSSRepeaterBase(string portName, int baud = 115200)
+        public MotorolaRSSRepeaterBase(string portName, int baud = 115200)
         {
             PacketBuffer = new List<byte>();
             ReplyBuffer = new List<string>();
@@ -114,7 +114,7 @@ namespace OpenAutoBench_ng.Communication.Radio.Motorola.RSSRepeaterBase
             //HasData = false;
         }
 
-        public async Task PerformTests(RSSRepeaterBaseTestParams testParams)
+        public async Task PerformTests(MotorolaRSSRepeaterBaseTestParams testParams)
         {
             await AccessDisable();
             await Task.Delay(300);
@@ -162,6 +162,7 @@ namespace OpenAutoBench_ng.Communication.Radio.Motorola.RSSRepeaterBase
             {
                 testParams.callback("Did RSSI test");
             }
+
             await Task.Delay(1000);
             await Reset();
             await Task.Delay(1000); // flush commands

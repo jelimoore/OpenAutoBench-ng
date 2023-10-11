@@ -40,9 +40,8 @@ namespace OpenAutoBench_ng.Communication.Instrument.Connection
         /// <returns></returns>
         public async Task<string> Send(string toSend)
         {
-            _serialPort.WriteLine(toSend);
-            int val = _serialPort.BytesToRead;
-            return _serialPort.ReadLine();
+            await Transmit(toSend);
+            return await ReadLine();
         }
 
         /// <summary>
@@ -53,6 +52,11 @@ namespace OpenAutoBench_ng.Communication.Instrument.Connection
         public async Task Transmit(string toSend)
         {
             _serialPort.WriteLine(toSend);
+        }
+
+        public async Task<string> ReadLine()
+        {
+            return _serialPort.ReadLine();
         }
 
         public async Task TransmitByte(byte[] toSend)

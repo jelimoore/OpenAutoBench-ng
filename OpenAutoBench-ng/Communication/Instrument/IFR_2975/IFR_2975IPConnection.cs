@@ -91,5 +91,10 @@ namespace OpenAutoBench_ng.Communication.Instrument.IFR_2975
         {
             throw new NotImplementedException();
         }
+
+        public async Task<string> ReadLine()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -2,7 +2,7 @@
 {
     public enum InstrumentOutputPort
     {
-        RF_OUT,
+        RF_IN_OUT,
         DUPLEX_OUT
     }
 }

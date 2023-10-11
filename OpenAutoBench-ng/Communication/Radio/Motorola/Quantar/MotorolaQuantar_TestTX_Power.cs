@@ -5,7 +5,7 @@ namespace OpenAutoBench_ng.Communication.Radio.Motorola.Quantar
 {
     public class MotorolaQuantar_TestTX_Power : MotorolaRSSRepeater_TestTX_Power
     {
-        public MotorolaQuantar_TestTX_Power(RSSRepeaterBaseTestParams testParams) :
+        public MotorolaQuantar_TestTX_Power(MotorolaRSSRepeaterBaseTestParams testParams) :
             base(testParams)
         {
         }

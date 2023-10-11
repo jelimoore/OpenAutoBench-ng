@@ -56,19 +56,24 @@ namespace OpenAutoBench_ng.Communication.Instrument.Connection
 
         public async Task<string> Send(string toSend)
         {
-            toSend += _delimeter;
-            byte[] dataOut = System.Text.Encoding.ASCII.GetBytes(toSend);
-            _stream.Write(dataOut, 0, dataOut.Length);
+            await Transmit(toSend);
 
-            byte[] dataIn = new byte[1024];
-            var reader = new StreamReader(_stream);
-            var result = new List<string>();
-            return await reader.ReadLineAsync();
+            return await ReadLine();
         }
 
         public async Task Transmit(string toSend)
         {
-            //
+            toSend += _delimeter;
+            byte[] dataOut = System.Text.Encoding.ASCII.GetBytes(toSend);
+            _stream.Write(dataOut, 0, dataOut.Length);
+        }
+
+        public async Task<string> ReadLine()
+        {
+            byte[] dataIn = new byte[1024];
+            var reader = new StreamReader(_stream);
+            var result = new List<string>();
+            return await reader.ReadLineAsync();
         }
 
         public async Task TransmitByte(byte[] toSend)
