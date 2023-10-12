@@ -56,7 +56,7 @@ namespace OpenAutoBench_ng.Communication.Radio.Motorola.RSSRepeaterBase
                 await Task.Delay(5000);
                 float measErr = await Instrument.MeasureFrequencyError();
                 measErr = (float)Math.Round(measErr, 2);
-                LogCallback(String.Format("Measured frequency error at {0}MHz: {1}hz", (TXFrequency / 1000000F), measErr));
+                LogCallback(String.Format("Measured frequency error at {0}MHz: {1}hz", (TXFrequency / 1000000D), measErr));
             }
             catch (Exception ex)
             {

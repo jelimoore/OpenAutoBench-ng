@@ -42,8 +42,9 @@ namespace OpenAutoBench_ng.Communication.Radio.Motorola.RSSRepeaterBase
         {
             await Instrument.SetDisplay("RFAN");
             TXFrequency = await Repeater.GetTxFrequency();
-            await Repeater.Transmit("AL STNPWR RESET");
-            PA_PWR = int.Parse(await Repeater.Get("ORD_PWR"));
+            await Repeater.Send("AL STNPWR RESET");
+            await Task.Delay(100);
+            PA_PWR = int.Parse(await Repeater.Get("GET PA ORD_PWR"));
         }
 
         protected async Task<float> performTestWithReturn()
@@ -66,7 +67,23 @@ namespace OpenAutoBench_ng.Communication.Radio.Motorola.RSSRepeaterBase
 
         public async Task performAlignment()
         {
-            throw new NotImplementedException();
+            // run 5 times
+            for (int i = 0; i < 5; i++)
+            {
+                float measPower = await performTestWithReturn();
+                LogCallback($"Round {i}: {Math.Round(measPower, 2)}");
+                measPower = (float)Math.Round(measPower * 100);
+                double radioPower = Math.Round((double)(PA_PWR * 100));
+                LogCallback("Writing new power level to radio");
+                await Repeater.Send($"AL STNPWR WR {radioPower} {measPower}");
+                await Task.Delay(3000);
+            }
+
+            await Repeater.Send("AL STNPWR SAVE");
+            await Task.Delay(6000);
+
+            float finalMeasPower = await performTestWithReturn();
+            LogCallback($"Final measured power: {Math.Round(finalMeasPower, 2)}w");
         }
 
         public async Task teardown()

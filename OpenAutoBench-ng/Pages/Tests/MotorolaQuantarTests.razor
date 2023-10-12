@@ -100,7 +100,36 @@
 
     private async Task OnAlnBegin(MouseEventArgs mouseEventArgs)
     {
-    //
+        clearOutput();
+        DateTime startTime = DateTime.Now;
+
+        updateOutput("Beginning alignment at " + startTime.ToString("HH:mm:ss tt"));
+        updateOutput("=====================================");
+
+        await ConnectRadio();
+
+        testParams.instrument = instrument;
+        testParams.callback = updateOutput;
+        testParams.radio = radio;
+        try
+        {
+            await radio.PerformAlignment(testParams);
+        }
+        catch (Exception e)
+        {
+            updateOutput(String.Format("Error when aligning: {0}", e.ToString()));
+        }
+        finally
+        {
+            radio.Disconnect();
+            await instrument.Disconnect();
+        }
+
+
+        DateTime endTime = DateTime.Now;
+        updateOutput("Completed tests at " + endTime.ToString("HH:mm:ss tt"));
+        TimeSpan timeDiff = endTime.Subtract(startTime);
+        updateOutput("Done in " + timeDiff.ToString(@"hh\:mm\:ss"));
     }
 
     private async Task OnTestBegin(MouseEventArgs mouseEventArgs)

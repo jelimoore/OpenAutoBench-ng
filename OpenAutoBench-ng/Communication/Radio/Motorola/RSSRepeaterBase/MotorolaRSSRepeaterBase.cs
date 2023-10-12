@@ -168,6 +168,27 @@ namespace OpenAutoBench_ng.Communication.Radio.Motorola.RSSRepeaterBase
             await Task.Delay(1000); // flush commands
         }
 
+        public async Task PerformAlignment(MotorolaRSSRepeaterBaseTestParams testParams)
+        {
+            await AccessDisable();
+            await Task.Delay(300);
+            await SetShell(Shell.RSS);
+            await Task.Delay(300);
+
+            if (testParams.doPowerTest)
+            {
+                MotorolaRSSRepeater_TestTX_Power test = new MotorolaRSSRepeater_TestTX_Power(testParams);
+                await test.setup();
+                await Task.Delay(1000);
+                await test.performAlignment();
+                await Task.Delay(1000);
+                await test.teardown();
+            }
+            await Task.Delay(1000);
+            await Reset();
+            await Task.Delay(1000); // flush commands
+        }
+
         public async Task Transmit(string data)
         {
             _serialPort.WriteLine(data);
