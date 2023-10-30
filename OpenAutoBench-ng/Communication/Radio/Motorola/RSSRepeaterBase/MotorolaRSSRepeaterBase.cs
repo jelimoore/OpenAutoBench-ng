@@ -175,6 +175,16 @@ namespace OpenAutoBench_ng.Communication.Radio.Motorola.RSSRepeaterBase
             await SetShell(Shell.RSS);
             await Task.Delay(300);
 
+            if (testParams.doRefoscTest)
+            {
+                MotorolaRSSRepeater_TestTX_ReferenceOscillator test = new MotorolaRSSRepeater_TestTX_ReferenceOscillator(testParams);
+                await test.setup();
+                await Task.Delay(1000);
+                await test.performAlignment();
+                await Task.Delay(1000);
+                await test.teardown();
+            }
+
             if (testParams.doPowerTest)
             {
                 MotorolaRSSRepeater_TestTX_Power test = new MotorolaRSSRepeater_TestTX_Power(testParams);
