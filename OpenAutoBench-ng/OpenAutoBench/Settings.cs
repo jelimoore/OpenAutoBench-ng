@@ -6,12 +6,13 @@
 
         public enum InstrumentTypeEnum
         {
-            //Generic = 0,    // will just issue SCPI and hope for the best; analog only
+            //Generic = 0,            // will just issue SCPI and hope for the best; analog only
             HP_8900 = 1,            // HP 8935, 8920, possibly others
             //Aeroflex_3920 = 2,      // Aeroflex 3920
             IFR_2975 = 3,           // Aeroflex/IFR 2975
-            R2670 = 4,    // General Dynamics/Motorola R2600
-            //Anritsu = 5,            // Anritsu LMR Master
+            R2670 = 4,              // General Dynamics/Motorola R2600
+            Astronics_R8000 = 5,    // Freedom/Astronics R8100
+            Viavi_8800SX = 6,       // Aeroflex/Viavi 8800SX
         }
 
         public InstrumentTypeEnum InstrumentType { get; set; }
