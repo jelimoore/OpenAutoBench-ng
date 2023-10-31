@@ -59,7 +59,7 @@ namespace OpenAutoBench_ng.Communication.Radio.Motorola.RSSRepeaterBase
             float measErr = 0.0f;
             try
             {
-                Instrument.SetRxFrequency(TXFrequency);
+                await Instrument.SetRxFrequency(TXFrequency);
                 Repeater.Keyup();
                 await Task.Delay(5000);
                 measErr = await Instrument.MeasureFrequencyError();

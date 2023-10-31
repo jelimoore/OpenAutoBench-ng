@@ -15,10 +15,10 @@ namespace OpenAutoBench_ng.Communication.Instrument.Connection
 
         private string _delimeter;
 
-        public IPConnection(string hostname, int port)
+        public IPConnection(string hostname, int port, string delimeter = "\n")
         {
             _hostname = hostname;
-            _delimeter = "\n";
+            _delimeter = delimeter;
 
             if (port > 65535)
             {
@@ -70,15 +70,18 @@ namespace OpenAutoBench_ng.Communication.Instrument.Connection
 
         public async Task<string> ReadLine()
         {
-            byte[] dataIn = new byte[1024];
             var reader = new StreamReader(_stream);
-            var result = new List<string>();
             return await reader.ReadLineAsync();
         }
 
         public async Task TransmitByte(byte[] toSend)
         {
             _stream.Write(toSend, 0, toSend.Length);
+        }
+
+        public void SetDelimeter(string delimeter)
+        {
+            _delimeter = delimeter;
         }
     }
 }

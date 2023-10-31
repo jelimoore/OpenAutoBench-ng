@@ -96,5 +96,10 @@ namespace OpenAutoBench_ng.Communication.Instrument.IFR_2975
         {
             throw new NotImplementedException();
         }
+
+        public void SetDelimeter(string delimeter)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

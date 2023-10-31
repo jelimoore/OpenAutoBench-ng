@@ -17,5 +17,7 @@
         public Task<byte[]> ReceiveByte();
 
         public Task FlushBuffer();
+
+        public void SetDelimeter(string delimeter);
     }
 }

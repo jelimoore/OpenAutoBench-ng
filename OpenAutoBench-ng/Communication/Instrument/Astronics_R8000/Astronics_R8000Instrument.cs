@@ -2,7 +2,7 @@
 
 namespace OpenAutoBench_ng.Communication.Instrument.Astronics_R8000
 {
-    public class Astronics_R8000 : IBaseInstrument
+    public class Astronics_R8000Instrument : IBaseInstrument
     {
         private IInstrumentConnection Connection;
 
@@ -12,15 +12,23 @@ namespace OpenAutoBench_ng.Communication.Instrument.Astronics_R8000
 
         public bool SupportsDMR { get { return false; } }
 
-        public Astronics_R8000(IInstrumentConnection conn)
+        public Astronics_R8000Instrument(IInstrumentConnection conn)
         {
             Connected = false;
-            Connection = new Astronics_R8000IPConnection(conn);
+            Connection = conn;
+            conn.SetDelimeter("\r\n");
         }
 
         private async Task<string> Send(string command)
         {
-            return await Connection.Send(command);
+            string result = await Connection.Send(command);
+            string[] resultTemp = result.Split(":", 2);
+            if (resultTemp[0] != "0")
+            {
+                throw new Exception($"Instrument returned error {resultTemp[0]}");
+            }
+            return resultTemp[1].Replace("\r", "").Replace("\n", "");
+
         }
 
         private async Task Transmit(string command)
@@ -31,25 +39,28 @@ namespace OpenAutoBench_ng.Communication.Instrument.Astronics_R8000
         public async Task Connect()
         {
             Connection.Connect();
-            await Send("LOCKOUT ON");
+            await Task.Delay(100);
+            await Send("SET RF:Frequency Error Units=Hertz");
+            await Task.Delay(200);
+            await Send("SET METER: PWR Meter Range=150W");
+            await Task.Delay(200);
+            await Send("SET METER:Subzone=Power Meter");
 
         }
 
         public async Task Disconnect()
         {
-            await Send("LOCKOUT OFF");
             Connection.Disconnect();
         }
 
         public async Task GenerateSignal(float power)
         {
-            await Send($"Generator RFLEVel {power.ToString()}");
+            throw new NotImplementedException();
         }
 
         public async Task GenerateFMSignal(float power, float afFreq)
         {
-            await GenerateSignal(power);
-            await Send("Generator MODulation 1");
+            throw new NotImplementedException();
         }
 
         public async Task StopGenerating()
@@ -64,27 +75,33 @@ namespace OpenAutoBench_ng.Communication.Instrument.Astronics_R8000
 
         public async Task SetRxFrequency(int frequency)
         {
-            await Send($"Receiver FREQuency {frequency.ToString()} Hz");
+            await Send($"SET RF:Monitor Frequency={frequency} Hz");
+            // necessary to wait a little while or else it will return busy
+            await Task.Delay(5000);
         }
 
         public async Task SetTxFrequency(int frequency)
         {
-            await Send($"Generator FREQuency {frequency.ToString()} Hz");
+            await Send($"SET RF:Generator Frequency={frequency} Hz");
+            // necessary to wait a little while or else it will return busy
+            await Task.Delay(5000);
         }
 
         public async Task<float> MeasurePower()
         {
-            return float.Parse(await Send("Power VALue"));
+            float dbm = float.Parse(await Send("GET METER:Measured Power"));
+            float watts = (float) Math.Pow(10, (double) dbm / 10D) / 1000;
+            return watts;
         }
 
         public async Task<float> MeasureFrequencyError()
         {
-            return float.Parse(await Send("RFError VALue"));
+            return float.Parse(await Send("GET MONITOR:Frequency Error"));
         }
 
         public async Task<float> MeasureFMDeviation()
         {
-            return float.Parse(await Send("FMDev VALue"));
+            return float.Parse(await Send("GET MONITOR:Deviation+"));
         }
 
         public async Task<string> GetInfo()
@@ -99,6 +116,7 @@ namespace OpenAutoBench_ng.Communication.Instrument.Astronics_R8000
 
         public async Task SetDisplay(string displayName)
         {
+            //
             //await Transmit("DISP " + displayName);
         }
 
@@ -110,9 +128,10 @@ namespace OpenAutoBench_ng.Communication.Instrument.Astronics_R8000
 
         public async Task<float> MeasureP25RxBer()
         {
-            string resp = await Send("Ber READING");
+            throw new NotImplementedException();
+            //string resp = await Send("Ber READING");
             // reading is percentage as decimal
-            return float.Parse(resp.Split(" ")[0]) * 100;
+            //return float.Parse(resp.Split(" ")[0]) * 100;
         }
 
         public Task<float> MeasureDMRRxBer()
@@ -122,7 +141,8 @@ namespace OpenAutoBench_ng.Communication.Instrument.Astronics_R8000
 
         public async Task ResetBERErrors()
         {
-            await Send("Ber RESETERRors");
+            throw new NotImplementedException();
+            //await Send("Ber RESETERRors");
         }
     }
 }

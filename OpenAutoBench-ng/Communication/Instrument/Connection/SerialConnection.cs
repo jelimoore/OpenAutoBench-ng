@@ -9,7 +9,7 @@ namespace OpenAutoBench_ng.Communication.Instrument.Connection
         private SerialPort _serialPort { get; set; }
 
         // opens an 115200 8n1 port without flow control
-        public SerialConnection(string portName, int baudrate)
+        public SerialConnection(string portName, int baudrate, string delimeter = "\n")
         {
             _serialPort = new SerialPort(portName);
             _serialPort.BaudRate = baudrate;
@@ -72,6 +72,11 @@ namespace OpenAutoBench_ng.Communication.Instrument.Connection
         public async Task FlushBuffer()
         {
             await _serialPort.BaseStream.FlushAsync();
+        }
+
+        public void SetDelimeter(string delimeter)
+        {
+            _serialPort.NewLine = delimeter;
         }
     }
 }

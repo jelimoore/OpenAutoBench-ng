@@ -1,21 +1,24 @@
 ﻿using OpenAutoBench_ng.Communication.Instrument.Connection;
+using OpenAutoBench_ng.Communication.Instrument.IFR_2975;
 
-namespace OpenAutoBench_ng.Communication.Instrument.IFR_2975
+namespace OpenAutoBench_ng.Communication.Instrument.Viavi_8800SX
 {
-    public class IFR_2975Instrument : IBaseInstrument
+    public class Viavi_8800SXInstrument: IBaseInstrument
     {
         private IInstrumentConnection Connection;
 
         public bool Connected { get; private set; }
 
+        //TODO: get features and see if we are licensed for P25 or DMR
         public bool SupportsP25 { get { return true; } }
 
-        public bool SupportsDMR { get { return false; } }
+        public bool SupportsDMR { get { return true; } }
 
-        public IFR_2975Instrument(IInstrumentConnection conn)
+        public Viavi_8800SXInstrument(IInstrumentConnection conn)
         {
             Connected = false;
-            Connection = new IFR_2975Connection(conn);
+            Connection = conn;
+            Connection.SetDelimeter("\r\n");
         }
 
         private async Task<string> Send(string command)
@@ -31,25 +34,22 @@ namespace OpenAutoBench_ng.Communication.Instrument.IFR_2975
         public async Task Connect()
         {
             Connection.Connect();
-            await Send("LOCKOUT ON");
 
         }
 
         public async Task Disconnect()
         {
-            await Send("LOCKOUT OFF");
             Connection.Disconnect();
         }
 
         public async Task GenerateSignal(float power)
         {
-            await Send($"Generator RFLEVel {power.ToString()}");
+            throw new NotImplementedException();
         }
 
         public async Task GenerateFMSignal(float power, float afFreq)
         {
-            await GenerateSignal(power);
-            await Send("Generator MODulation 1");
+            throw new NotImplementedException();
         }
 
         public Task StopGenerating()
@@ -64,27 +64,27 @@ namespace OpenAutoBench_ng.Communication.Instrument.IFR_2975
 
         public async Task SetRxFrequency(int frequency)
         {
-            await Send($"Receiver FREQuency {frequency.ToString()} Hz");
+            throw new NotImplementedException();
         }
 
         public async Task SetTxFrequency(int frequency)
         {
-            await Send($"Generator FREQuency {frequency.ToString()} Hz");
+            throw new NotImplementedException();
         }
 
         public async Task<float> MeasurePower()
         {
-            return float.Parse(await Send("Power VALue"));
+            return float.Parse(await Send(":rfpow:reading:avg?"));
         }
 
         public async Task<float> MeasureFrequencyError()
         {
-            return float.Parse(await Send("RFError VALue"));
+            return float.Parse(await Send(":rferr:reading:avg?"));
         }
 
         public async Task<float> MeasureFMDeviation()
         {
-            return float.Parse(await Send("FMDev VALue"));
+            throw new NotImplementedException();
         }
 
         public async Task<string> GetInfo()
@@ -110,9 +110,10 @@ namespace OpenAutoBench_ng.Communication.Instrument.IFR_2975
 
         public async Task<float> MeasureP25RxBer()
         {
-            string resp = await Send("Ber READING");
+            throw new NotImplementedException();
+            //string resp = await Send("Ber READING");
             // reading is percentage as decimal
-            return float.Parse(resp.Split(" ")[0]) * 100;
+            //return float.Parse(resp.Split(" ")[0]) * 100;
         }
 
         public Task<float> MeasureDMRRxBer()
@@ -122,7 +123,8 @@ namespace OpenAutoBench_ng.Communication.Instrument.IFR_2975
 
         public async Task ResetBERErrors()
         {
-            await Send("Ber RESETERRors");
+            throw new NotImplementedException();
+            //await Send("Ber RESETERRors");
         }
     }
 }

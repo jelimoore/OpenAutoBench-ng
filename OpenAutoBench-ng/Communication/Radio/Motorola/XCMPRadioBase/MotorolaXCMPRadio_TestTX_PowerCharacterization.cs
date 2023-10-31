@@ -59,7 +59,7 @@ namespace OpenAutoBench_ng.Communication.Radio.Motorola.XCMPRadioBase
                 for (int i = 0; i < TXFrequencies.Length; i++)
                 {
                     Radio.SetTXFrequency(TXFrequencies[i], false);
-                    Instrument.SetRxFrequency(TXFrequencies[i]);
+                    await Instrument.SetRxFrequency(TXFrequencies[i]);
                     
                     // low power
                     Radio.Keyup();
@@ -72,7 +72,7 @@ namespace OpenAutoBench_ng.Communication.Radio.Motorola.XCMPRadioBase
                     Radio.Dekey();
                     await Task.Delay(1000);
 
-                    // low power
+                    // high power
                     Radio.Keyup();
                     await Task.Delay(100);
                     Radio.SoftpotUpdate(0x01, CharPoints[i*2+1]);

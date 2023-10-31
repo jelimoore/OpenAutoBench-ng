@@ -11,6 +11,8 @@ using PdfSharpCore;
 using PdfSharpCore.Pdf.IO;
 using PdfSharpCore.Drawing;
 using PdfSharpCore.Drawing.Layout;
+using OpenAutoBench_ng.Communication.Instrument.Astronics_R8000;
+using OpenAutoBench_ng.Communication.Instrument.Viavi_8800SX;
 
 namespace OpenAutoBench_ng.OpenAutoBench
 {
@@ -86,6 +88,64 @@ namespace OpenAutoBench_ng.OpenAutoBench
                         throw new Exception("GPIB enabled and IFR 2975 selected. GPIB is not supported on this instrument.");
                     }
                     instrument = new IFR_2975Instrument(connection);
+                    await instrument.Connect();
+                    await Task.Delay(500);
+
+                    try
+                    {
+                        string instInfo = await instrument.GetInfo();
+                        if (!(instInfo.Length > 0))
+                        {
+                            throw new Exception("Get info succeeded but returned a zero length");
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        await instrument.Disconnect();
+                        throw new Exception("Connection to instrument failed: " + e.ToString());
+                    }
+                    break;
+                case Settings.InstrumentTypeEnum.Astronics_R8000:
+                    if (settings.IsGPIB)
+                    {
+                        throw new Exception("GPIB enabled and Astronics R8000 selected. GPIB is not supported on this instrument.");
+                    }
+
+                    if (connection is SerialConnection)
+                    {
+                        throw new Exception("Serial selected and Astronics R8000 selected. Serial is not supported in this instrument.");
+                    }
+
+                    instrument = new Astronics_R8000Instrument(connection);
+                    await instrument.Connect();
+                    await Task.Delay(500);
+
+                    try
+                    {
+                        string instInfo = await instrument.GetInfo();
+                        if (!(instInfo.Length > 0))
+                        {
+                            throw new Exception("Get info succeeded but returned a zero length");
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        await instrument.Disconnect();
+                        throw new Exception("Connection to instrument failed: " + e.ToString());
+                    }
+                    break;
+                case Settings.InstrumentTypeEnum.Viavi_8800SX:
+                    if (settings.IsGPIB)
+                    {
+                        throw new Exception("GPIB enabled and Viavi 8800SX selected. GPIB is not supported on this instrument.");
+                    }
+
+                    if (connection is SerialConnection)
+                    {
+                        throw new Exception("Serial selected and Viavi 8800SX selected. Serial is not supported in this instrument.");
+                    }
+
+                    instrument = new Viavi_8800SXInstrument(connection);
                     await instrument.Connect();
                     await Task.Delay(500);
 
