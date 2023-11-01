@@ -59,11 +59,11 @@ namespace OpenAutoBench_ng.Communication.Radio.Motorola.XCMPRadioBase
                     foreach (int TXFrequency in TXFrequencies)
                     {
                         Radio.SetTXFrequency(TXFrequency, true);
-                        Instrument.SetRxFrequency(TXFrequency);
+                        await Instrument.SetRxFrequency(TXFrequency);
                         Radio.Keyup();
                         await Task.Delay(1500);
                         await Instrument.ResetBERErrors();
-                        await Task.Delay(3500);
+                        await Task.Delay(5000);
                         float measErr = await Instrument.MeasureP25RxBer();
                         Radio.Dekey();
                         measErr = (float)Math.Round(measErr, 4);

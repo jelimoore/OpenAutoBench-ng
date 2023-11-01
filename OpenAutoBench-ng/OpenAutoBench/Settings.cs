@@ -57,6 +57,8 @@
         /// </summary>
         public bool DangerMode { get; set; }
 
+        public bool EnableExtendedFreqTest { get; set; }
+
         /// <summary>
         /// Disables model number checking in tests, will force all tests to be run regardless if the radio supports it.
         /// </summary>
@@ -76,6 +78,7 @@
             MotoTrboKeys = new int[] { 0, 0, 0, 0};
             MotoTrboDelta = 0;
             DangerMode = false;
+            EnableExtendedFreqTest = false;
             DisableModelChecking = false;
         }
     }

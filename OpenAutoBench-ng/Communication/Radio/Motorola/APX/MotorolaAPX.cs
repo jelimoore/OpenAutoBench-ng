@@ -47,6 +47,16 @@ namespace OpenAutoBench_ng.Communication.Radio.Motorola.APX
                 await test.performTest();
                 await test.teardown();
             }
+
+            await Task.Delay(1000);
+
+            if (testParams.doTxExtendedTest)
+            {
+                MotorolaAPX_TestTX_ExtendedFreq test = new MotorolaAPX_TestTX_ExtendedFreq(testParams);
+                await test.setup();
+                await test.performTest();
+                await test.teardown();
+            }
         }
 
         public override int[] GetTXPowerPoints()

@@ -25,6 +25,16 @@
 <input type="checkbox" @bind="testParams.doRxBer" /> Rx: BER
 <br />
 
+<div hidden="@(!settings.EnableExtendedFreqTest)">
+    <input type="checkbox" @bind="testParams.doTxExtendedTest" /> Tx: Extended Freq Test
+    <br />
+    <input type="text" @bind="testParams.ExtendedTestStart" /> Extended Freq Test Start (hz)
+    <br />
+    <input type="text" @bind="testParams.ExtendedTestEnd" /> Extended Freq Test End (hz)
+    <br />
+    <input type="text" @bind="testParams.ExtendedTestStep" /> Extended Freq Test Step (hz)
+</div>
+
 
 
 
@@ -44,6 +54,8 @@
     public XCMPRadioTestParams testParams = new XCMPRadioTestParams();
     IBaseInstrument instrument = null;
     MotorolaAPX radio = null;
+    private Preferences prefs = new Preferences();
+    private Settings settings;
 
     private async Task ConnectRadio()
     {
@@ -151,6 +163,7 @@
     protected override async Task OnInitializedAsync()
     {
         ports = SerialPort.GetPortNames();
+        settings = prefs.Load();
     }
 
     private async Task SavePDF()

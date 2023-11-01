@@ -128,10 +128,9 @@ namespace OpenAutoBench_ng.Communication.Instrument.Astronics_R8000
 
         public async Task<float> MeasureP25RxBer()
         {
-            throw new NotImplementedException();
-            //string resp = await Send("Ber READING");
-            // reading is percentage as decimal
-            //return float.Parse(resp.Split(" ")[0]) * 100;
+            await Send("SET P25:BER Test=Stop");
+            await Task.Delay(1000);     // the times in the manual are a lie
+            return float.Parse(await Send("GET P25:BER Result"));
         }
 
         public Task<float> MeasureDMRRxBer()
@@ -141,8 +140,8 @@ namespace OpenAutoBench_ng.Communication.Instrument.Astronics_R8000
 
         public async Task ResetBERErrors()
         {
-            throw new NotImplementedException();
-            //await Send("Ber RESETERRors");
+            await Task.Delay(5000);
+            await Send("SET P25:BER Test=Start");
         }
     }
 }
