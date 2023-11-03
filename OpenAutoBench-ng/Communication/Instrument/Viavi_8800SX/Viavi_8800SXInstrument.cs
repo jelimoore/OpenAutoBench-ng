@@ -65,12 +65,12 @@ namespace OpenAutoBench_ng.Communication.Instrument.Viavi_8800SX
 
         public async Task SetRxFrequency(int frequency)
         {
-            await Send($":rec:freq {frequency} MHz");
+            await Send($":rec:freq {frequency} Hz");
         }
 
         public async Task SetTxFrequency(int frequency)
         {
-            await Send($":gen:freq {frequency} MHz");
+            await Send($":gen:freq {frequency} Hz");
         }
 
         public async Task<float> MeasurePower()
