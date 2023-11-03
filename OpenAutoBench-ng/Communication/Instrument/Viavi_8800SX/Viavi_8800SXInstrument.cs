@@ -18,12 +18,13 @@ namespace OpenAutoBench_ng.Communication.Instrument.Viavi_8800SX
         {
             Connected = false;
             Connection = conn;
-            Connection.SetDelimeter("\r\n");
+            Connection.SetDelimeter("");
         }
 
         private async Task<string> Send(string command)
         {
             return await Connection.Send(command);
+            //return await Connection.Send("\r\n");
         }
 
         private async Task Transmit(string command)
@@ -64,12 +65,12 @@ namespace OpenAutoBench_ng.Communication.Instrument.Viavi_8800SX
 
         public async Task SetRxFrequency(int frequency)
         {
-            throw new NotImplementedException();
+            await Send($":rec:freq {frequency} MHz");
         }
 
         public async Task SetTxFrequency(int frequency)
         {
-            throw new NotImplementedException();
+            await Send($":gen:freq {frequency} MHz");
         }
 
         public async Task<float> MeasurePower()
@@ -89,7 +90,10 @@ namespace OpenAutoBench_ng.Communication.Instrument.Viavi_8800SX
 
         public async Task<string> GetInfo()
         {
-            return await Send("*IDN?");
+            string mfr = await Send(":options:man?");
+            string model = await Send(":options:model?");
+            string serial = await Send(":options:serial?");
+            return $"{mfr},{model},{serial}";
         }
 
         public async Task Reset()
