@@ -46,7 +46,7 @@ namespace OpenAutoBench_ng.Communication.Radio.Motorola.XCMPRadioBase
         public async Task setup()
         {
             LogCallback(String.Format("Setting up for {0}", name));
-            await Instrument.SetDisplay("RFAN");
+            await Instrument.SetDisplay(InstrumentScreen.Monitor);
             await Task.Delay(1000);
 
             CharPoints = Radio.GetTXPowerPoints();

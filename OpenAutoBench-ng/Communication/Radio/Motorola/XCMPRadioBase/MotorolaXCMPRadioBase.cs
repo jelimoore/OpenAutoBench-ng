@@ -36,6 +36,7 @@ namespace OpenAutoBench_ng.Communication.Radio.Motorola.XCMPRadioBase
 
         public enum StatusOperation : byte
         {
+            RSSI = 0x02,
             BatteryLevel = 0x03,
             LowBattery = 0x04,
             ModelNumber = 0x07,
@@ -325,11 +326,33 @@ namespace OpenAutoBench_ng.Communication.Radio.Motorola.XCMPRadioBase
         {
             byte[] cmd = new byte[3];
 
-            // softpot opcode
+            // transmit config opcode
             cmd[0] = 0x00;
             cmd[1] = 0x02;
 
             cmd[2] = (byte)option;
+
+            Send(cmd);
+        }
+
+        public void SetReceiveConfig(XCMPRadioReceiveOption option)
+        {
+            byte[] cmd = new byte[3];
+
+            // receive config opcode
+            cmd[0] = 0x00;
+            cmd[1] = 0x03;
+
+            cmd[2] = (byte)option;
+
+            Send(cmd);
+
+            cmd = new byte[3];
+
+            // receive opcode
+            cmd[0] = 0x00;
+            cmd[1] = 0x05;
+            cmd[2] = 0x01;
 
             Send(cmd);
         }

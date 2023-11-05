@@ -1,4 +1,6 @@
-﻿using OpenAutoBench_ng.Communication.Instrument.Connection;
+﻿using Microsoft.Extensions.FileSystemGlobbing.Internal;
+using OpenAutoBench_ng.Communication.Instrument.Connection;
+using System.Collections.Generic;
 
 namespace OpenAutoBench_ng.Communication.Instrument.Astronics_R8000
 {
@@ -40,11 +42,13 @@ namespace OpenAutoBench_ng.Communication.Instrument.Astronics_R8000
         {
             Connection.Connect();
             await Task.Delay(100);
+            await SetDisplay(InstrumentScreen.Monitor);
             await Send("SET RF:Frequency Error Units=Hertz");
             await Task.Delay(200);
             await Send("SET METER: PWR Meter Range=150W");
             await Task.Delay(200);
             await Send("SET METER:Subzone=Power Meter");
+            await Task.Delay(200);
 
         }
 
@@ -55,7 +59,20 @@ namespace OpenAutoBench_ng.Communication.Instrument.Astronics_R8000
 
         public async Task GenerateSignal(float power)
         {
-            throw new NotImplementedException();
+            await Send($"SET RF:Output Level={power}");
+            await Task.Delay(3000);
+            await SetRFPower(true);
+        }
+
+        private async Task SetRFPower(bool status)
+        {
+            bool currStatus = await Send("GET RF:RF Power") == "On" ? true : false;
+
+            if (status != currStatus)
+            {
+                await Send("DO RF:RF Power");
+            }
+            await Task.Delay(500);
         }
 
         public async Task GenerateFMSignal(float power, float afFreq)
@@ -63,9 +80,16 @@ namespace OpenAutoBench_ng.Communication.Instrument.Astronics_R8000
             throw new NotImplementedException();
         }
 
+        public async Task GenerateP251011Signal(float power)
+        {
+            await Send("SET P25:Gen Test Pattern=1011 Hz Tone");
+            await Task.Delay(150);
+            await GenerateSignal(power);
+        }
+
         public async Task StopGenerating()
         {
-            throw new NotImplementedException();
+            await SetRFPower(false);
         }
 
         public async Task SetGenPort(InstrumentOutputPort outputPort)
@@ -82,7 +106,7 @@ namespace OpenAutoBench_ng.Communication.Instrument.Astronics_R8000
 
         public async Task SetTxFrequency(int frequency)
         {
-            await Send($"SET RF:Generator Frequency={frequency} Hz");
+            await Send($"SET RF:Generate Frequency={frequency} Hz");
             // necessary to wait a little while or else it will return busy
             await Task.Delay(5000);
         }
@@ -114,10 +138,20 @@ namespace OpenAutoBench_ng.Communication.Instrument.Astronics_R8000
             await Send("*RST");
         }
 
-        public async Task SetDisplay(string displayName)
+        public async Task SetDisplay(InstrumentScreen screen)
         {
-            //
-            //await Transmit("DISP " + displayName);
+            switch (screen)
+            {
+                case InstrumentScreen.Monitor:
+                    await Send("SET SYSTEM:Mode Request = Monitor");
+                    break;
+                case InstrumentScreen.Generate:
+                    await Send("SET SYSTEM:Mode Request = Generate");
+                    break;
+                default:
+                    throw new Exception("Unknown screen requested");
+            }
+            await Task.Delay(5000);
         }
 
         public async Task SetupFiltersForDeviation()
@@ -128,6 +162,8 @@ namespace OpenAutoBench_ng.Communication.Instrument.Astronics_R8000
 
         public async Task<float> MeasureP25RxBer()
         {
+            await Send("GO SYSTEM:P25");
+            await Task.Delay(5000);
             await Send("SET P25:BER Test=Stop");
             await Task.Delay(1000);     // the times in the manual are a lie
             return float.Parse(await Send("GET P25:BER Result"));

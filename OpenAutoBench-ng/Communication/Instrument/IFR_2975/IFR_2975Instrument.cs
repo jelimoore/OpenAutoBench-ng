@@ -97,7 +97,7 @@ namespace OpenAutoBench_ng.Communication.Instrument.IFR_2975
             await Send("*RST");
         }
 
-        public async Task SetDisplay(string displayName)
+        public async Task SetDisplay(InstrumentScreen screen)
         {
             //await Transmit("DISP " + displayName);
         }

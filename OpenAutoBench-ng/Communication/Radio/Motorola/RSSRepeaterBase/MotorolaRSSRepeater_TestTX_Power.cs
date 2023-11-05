@@ -40,7 +40,7 @@ namespace OpenAutoBench_ng.Communication.Radio.Motorola.RSSRepeaterBase
 
         public async Task setup()
         {
-            await Instrument.SetDisplay("RFAN");
+            await Instrument.SetDisplay(InstrumentScreen.Monitor);
             TXFrequency = await Repeater.GetTxFrequency();
             await Repeater.Send("AL STNPWR RESET");
             await Task.Delay(100);

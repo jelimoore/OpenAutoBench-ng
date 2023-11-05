@@ -38,7 +38,7 @@ namespace OpenAutoBench_ng.Communication.Radio.Motorola.RSSRepeaterBase
 
         public async Task setup()
         {
-            await Instrument.SetDisplay("AFAN");
+            await Instrument.SetDisplay(InstrumentScreen.Monitor);
             await Instrument.SetupFiltersForDeviation();
         }
 

@@ -42,7 +42,7 @@ namespace OpenAutoBench_ng.Communication.Radio.Motorola.XPR
         public async Task setup()
         {
             LogCallback(String.Format("Setting up for {0}", name));
-            await Instrument.SetDisplay("RFGEN");
+            await Instrument.SetDisplay(InstrumentScreen.Generate);
             await Task.Delay(1000);
 
             RXFrequency = MotorolaXPR_Frequencies.RxRefOscFrequencies(Radio);

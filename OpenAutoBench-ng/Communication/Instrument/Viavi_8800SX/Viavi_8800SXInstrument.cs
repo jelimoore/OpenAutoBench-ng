@@ -10,15 +10,17 @@ namespace OpenAutoBench_ng.Communication.Instrument.Viavi_8800SX
         public bool Connected { get; private set; }
 
         //TODO: get features and see if we are licensed for P25 or DMR
-        public bool SupportsP25 { get { return true; } }
+        public bool SupportsP25 { get; set; }
 
-        public bool SupportsDMR { get { return true; } }
+        public bool SupportsDMR { get; set; }
 
         public Viavi_8800SXInstrument(IInstrumentConnection conn)
         {
             Connected = false;
             Connection = conn;
             Connection.SetDelimeter("");
+            SupportsP25 = true;
+            SupportsDMR = true;
         }
 
         private async Task<string> Send(string command)
@@ -45,7 +47,7 @@ namespace OpenAutoBench_ng.Communication.Instrument.Viavi_8800SX
 
         public async Task GenerateSignal(float power)
         {
-            throw new NotImplementedException();
+            await Send($":gen:lvl:dbm {power}");
         }
 
         public async Task GenerateFMSignal(float power, float afFreq)
@@ -53,9 +55,9 @@ namespace OpenAutoBench_ng.Communication.Instrument.Viavi_8800SX
             throw new NotImplementedException();
         }
 
-        public Task StopGenerating()
+        public async Task StopGenerating()
         {
-            throw new NotImplementedException();
+            await Send($":gen:lvl:dbm -137");
         }
 
         public async Task SetGenPort(InstrumentOutputPort outputPort)
@@ -65,12 +67,12 @@ namespace OpenAutoBench_ng.Communication.Instrument.Viavi_8800SX
 
         public async Task SetRxFrequency(int frequency)
         {
-            await Send($":rec:freq {frequency} Hz");
+            await Transmit($":rec:freq {frequency / 1000000D}");
         }
 
         public async Task SetTxFrequency(int frequency)
         {
-            await Send($":gen:freq {frequency} Hz");
+            await Transmit($":gen:freq {frequency / 1000000D}");
         }
 
         public async Task<float> MeasurePower()
@@ -80,12 +82,13 @@ namespace OpenAutoBench_ng.Communication.Instrument.Viavi_8800SX
 
         public async Task<float> MeasureFrequencyError()
         {
-            return float.Parse(await Send(":rferr:reading:avg?"));
+            // returns in khz
+            return float.Parse(await Send(":rferr:reading:val?")) * 1000;
         }
 
         public async Task<float> MeasureFMDeviation()
         {
-            throw new NotImplementedException();
+            return float.Parse(await Send(":devmod:reading:val?"));
         }
 
         public async Task<string> GetInfo()
@@ -101,7 +104,7 @@ namespace OpenAutoBench_ng.Communication.Instrument.Viavi_8800SX
             await Send("*RST");
         }
 
-        public async Task SetDisplay(string displayName)
+        public async Task SetDisplay(InstrumentScreen screen)
         {
             //await Transmit("DISP " + displayName);
         }

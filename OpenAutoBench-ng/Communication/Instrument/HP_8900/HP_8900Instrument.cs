@@ -111,9 +111,19 @@ namespace OpenAutoBench_ng.Communication.Instrument.HP_8900
             await Send("*RST");
         }
 
-        public async Task SetDisplay(string displayName)
+        public async Task SetDisplay(InstrumentScreen screen)
         {
-            await Transmit("DISP " + displayName);
+            switch (screen)
+            {
+                case InstrumentScreen.Monitor:
+                    await Send("DISP RFAN");
+                    break;
+                case InstrumentScreen.Generate:
+                    await Send("DISP RFG");
+                    break;
+                default:
+                    throw new Exception("Unknown screen requested");
+            }
         }
 
         public async Task SetupFiltersForDeviation()

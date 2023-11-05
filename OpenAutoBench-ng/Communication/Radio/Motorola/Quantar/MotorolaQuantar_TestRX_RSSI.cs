@@ -43,7 +43,7 @@ namespace OpenAutoBench_ng.Communication.Radio.Motorola.Quantar
 
         public async Task setup()
         {
-            await Instrument.SetDisplay("RFG");
+            await Instrument.SetDisplay(InstrumentScreen.Generate);
             await Repeater.Transmit("SET FREQ TX 0");
             RXFrequency = await Repeater.GetRxFrequency();
         }

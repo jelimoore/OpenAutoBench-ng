@@ -28,6 +28,8 @@
 <div hidden="@(!settings.EnableExtendedFreqTest)">
     <input type="checkbox" @bind="testParams.doTxExtendedTest" /> Tx: Extended Freq Test
     <br />
+    <input type="checkbox" @bind="testParams.doRxExtendedTest" /> Rx: Extended Freq Test
+    <br />
     <input type="text" @bind="testParams.ExtendedTestStart" /> Extended Freq Test Start (hz)
     <br />
     <input type="text" @bind="testParams.ExtendedTestEnd" /> Extended Freq Test End (hz)
@@ -66,7 +68,7 @@
         catch (Exception e)
         {
             updateOutput("Connection to test set failed: " + e.ToString());
-            return;
+            throw new Exception("Connection to test set failed");
         }
 
         try
@@ -82,7 +84,7 @@
         catch (Exception e)
         {
             updateOutput("Connection to radio failed: " + e.ToString());
-            return;
+            throw new Exception("Connection to radio failed");
         }
 
         // allows tests to be run

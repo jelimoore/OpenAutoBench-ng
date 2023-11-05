@@ -30,7 +30,7 @@
 
         public Task Reset();
 
-        public Task SetDisplay(string displayName);
+        public Task SetDisplay(InstrumentScreen screen);
 
         public Task SetupFiltersForDeviation();
 

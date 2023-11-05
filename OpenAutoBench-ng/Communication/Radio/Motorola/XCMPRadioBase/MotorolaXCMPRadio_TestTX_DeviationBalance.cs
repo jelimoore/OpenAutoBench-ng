@@ -43,7 +43,7 @@ namespace OpenAutoBench_ng.Communication.Radio.Motorola.XCMPRadioBase
         public async Task setup()
         {
             LogCallback(String.Format("Setting up for {0}", name));
-            await Instrument.SetDisplay("AFAN");
+            await Instrument.SetDisplay(InstrumentScreen.Monitor);
             await Instrument.SetupFiltersForDeviation();
             await Task.Delay(1000);
         }

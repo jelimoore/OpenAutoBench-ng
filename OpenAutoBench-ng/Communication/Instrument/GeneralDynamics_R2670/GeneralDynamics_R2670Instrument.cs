@@ -94,7 +94,7 @@ namespace OpenAutoBench_ng.Communication.Instrument.GeneralDynamics_R2670
             await Send("*RST");
         }
 
-        public async Task SetDisplay(string displayName)
+        public async Task SetDisplay(InstrumentScreen screen)
         {
             throw new NotImplementedException();
         }
