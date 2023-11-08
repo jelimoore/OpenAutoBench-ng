@@ -70,6 +70,7 @@ namespace OpenAutoBench_ng.Communication.Instrument.Astronics_R8000
 
             if (status != currStatus)
             {
+                await Task.Delay(500);
                 await Send("DO RF:RF Power");
             }
             await Task.Delay(500);
