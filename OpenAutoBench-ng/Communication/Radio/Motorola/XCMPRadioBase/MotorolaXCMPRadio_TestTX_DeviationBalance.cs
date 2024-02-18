@@ -56,14 +56,14 @@ namespace OpenAutoBench_ng.Communication.Radio.Motorola.XCMPRadioBase
                 {
                     int currFreq = TXFrequencies[i];
                     Radio.SetTXFrequency(currFreq, false);
-                    Instrument.SetRxFrequency(currFreq);
+                    await Instrument.SetRxFrequency(currFreq);
                     // low tone
                     Radio.SetTransmitConfig(XCMPRadioTransmitOption.DEVIATION_LOW);
                     Radio.Keyup();
                     await Task.Delay(5000);
-                    float measDev = await Instrument.MeasureFMDeviation();
-                    measDev = (float)Math.Round(measDev, 2);
-                    LogCallback(String.Format("TX Deviation Point at {0}MHz (low tone): {1}hz", (currFreq / 1000000F), measDev));
+                    float measDevLow = await Instrument.MeasureFMDeviation();
+                    measDevLow = (float)Math.Round(measDevLow);
+                    LogCallback(String.Format("TX Deviation Point at {0}MHz (low tone): {1}hz", (currFreq / 1000000F), measDevLow));
                     Radio.Dekey();
                     await Task.Delay(1000);
 
@@ -71,10 +71,14 @@ namespace OpenAutoBench_ng.Communication.Radio.Motorola.XCMPRadioBase
                     Radio.SetTransmitConfig(XCMPRadioTransmitOption.DEVIATION_HIGH);
                     Radio.Keyup();
                     await Task.Delay(5000);
-                    measDev = await Instrument.MeasureFMDeviation();
-                    measDev = (float)Math.Round(measDev, 2);
-                    LogCallback(String.Format("TX Deviation Point at {0}MHz (high tone): {1}hz", (currFreq / 1000000F), measDev));
+                    float measDevHigh = await Instrument.MeasureFMDeviation();
+                    measDevHigh = (float)Math.Round(measDevHigh);
+                    LogCallback(String.Format("TX Deviation Point at {0}MHz (high tone): {1}hz", (currFreq / 1000000F), measDevHigh));
                     Radio.Dekey();
+
+                    // percentage difference
+                    float percentDifference = (measDevHigh - measDevLow) / measDevLow * 100;
+                    LogCallback(String.Format("Variance between high tone and low tone at {0}MHz: {1}%", (currFreq / 1000000F), Math.Round(percentDifference, 2)));
                     await Task.Delay(1000);
                 }
             }

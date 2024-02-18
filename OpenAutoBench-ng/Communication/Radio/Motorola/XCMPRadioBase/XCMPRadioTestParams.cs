@@ -14,8 +14,8 @@ namespace OpenAutoBench_ng.Communication.Radio.Motorola.XCMPRadioBase
 
         // extended tests
 
-        public bool doRxExtendedTest = true;
-        public bool doTxExtendedTest = true;
+        public bool doRxExtendedTest = false;
+        public bool doTxExtendedTest = false;
 
         public int ExtendedTestStart = 0;
         public int ExtendedTestEnd = 0;
