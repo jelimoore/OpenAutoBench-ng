@@ -84,7 +84,7 @@ namespace OpenAutoBench_ng.Communication.Instrument.IFR_2975
 
         public async Task<float> MeasureFMDeviation()
         {
-            return float.Parse(await Send("FMDev VALue"));
+            return float.Parse(await Send("FMDev VALue"))*1000F;
         }
 
         public async Task<string> GetInfo()
