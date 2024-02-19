@@ -174,19 +174,48 @@ namespace OpenAutoBench_ng.OpenAutoBench
         {
             using (PdfDocument pdfDocument = new PdfDocument())
             {
-                int paragraphAfterSpacing = 8;
-                
-                PdfPage page = pdfDocument.Pages.Add();
-                XGraphics gfx = XGraphics.FromPdfPage(page);
-                XFont font = new XFont("Times New Roman", 12);
-                XRect rect = new XRect(50, 50, page.Width - 50, page.Height - 50);
-                XTextFormatter tf = new XTextFormatter(gfx);
-                tf.DrawString(text, font, XBrushes.Black, rect, XStringFormats.TopLeft);
+                pdfDocument.Info.Title = "OpenAutoBench-ng Radio Bench Test/Calibration Report";
 
+                XFont font = new XFont("Times New Roman", 12, XFontStyle.Regular);
+                int margin = 50; // Margin around the text
+                var pageSize = PageSize.Letter; // Set the page size to US Letter
+
+                // Calculate the line height based on the font
+                double lineHeight = font.GetHeight();
+
+                // Split the text into lines
+                var lines = text.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
+                int currentLine = 0;
+
+                while (currentLine < lines.Length)
+                {
+                    PdfPage page = pdfDocument.AddPage();
+                    page.Size = pageSize;
+                    XGraphics gfx = XGraphics.FromPdfPage(page);
+                    XTextFormatter tf = new XTextFormatter(gfx);
+
+                    // Create a rectangle for text layout
+                    XRect rect = new XRect(margin, margin, page.Width - 2 * margin, lineHeight);
+
+                    // Draw text line by line
+                    while (currentLine < lines.Length)
+                    {
+                        tf.DrawString(lines[currentLine], font, XBrushes.Black, rect, XStringFormats.TopLeft);
+                        rect.Y += lineHeight; // Move to the next line
+                        currentLine++;
+
+                        // Check if we need a new page
+                        if (rect.Y + lineHeight > page.Height - margin)
+                        {
+                            break; // Exit the loop to create a new page
+                        }
+                    }
+                }
+
+                // Save the document to a MemoryStream
                 using (MemoryStream stream = new MemoryStream())
                 {
-                    pdfDocument.Save(stream);
-                    pdfDocument.Close();
+                    pdfDocument.Save(stream, false);
                     return stream;
                 }
             }
