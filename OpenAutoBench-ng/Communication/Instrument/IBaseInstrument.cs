@@ -32,12 +32,22 @@
 
         public Task SetDisplay(InstrumentScreen screen);
 
-        public Task SetupFiltersForDeviation();
-
         public Task<float> MeasureP25RxBer();
 
         public Task<float> MeasureDMRRxBer();
 
         public Task ResetBERErrors();
+
+        public Task SetupRefOscillatorTest_P25();
+
+        public Task SetupRefOscillatorTest_FM();
+
+        public Task SetupTXPowerTest();
+
+        public Task SetupTXDeviationTest();
+
+        public Task SetupTXP25BERTest();
+
+        public Task SetupExtendedRXTest();
     }
 }

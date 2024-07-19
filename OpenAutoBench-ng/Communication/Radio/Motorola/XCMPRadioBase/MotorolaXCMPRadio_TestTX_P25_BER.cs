@@ -44,6 +44,8 @@ namespace OpenAutoBench_ng.Communication.Radio.Motorola.XCMPRadioBase
             LogCallback(String.Format("Setting up for {0}", name));
             await Instrument.SetDisplay(InstrumentScreen.Monitor);
             await Task.Delay(1000);
+            await Instrument.SetupTXP25BERTest();
+            await Task.Delay(1000);
 
             // let child set frequency
         }

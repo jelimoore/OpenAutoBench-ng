@@ -99,11 +99,6 @@ namespace OpenAutoBench_ng.Communication.Instrument.GeneralDynamics_R2670
             throw new NotImplementedException();
         }
 
-        public async Task SetupFiltersForDeviation()
-        {
-            throw new NotImplementedException();
-        }
-
         public Task<float> MeasureP25RxBer()
         {
             throw new NotImplementedException();
@@ -163,5 +158,36 @@ namespace OpenAutoBench_ng.Communication.Instrument.GeneralDynamics_R2670
             }
             return valList.ToArray();
         }
+
+        public async Task SetupRefOscillatorTest_P25()
+        {
+            //Not implemented, but shouldn't raise an exception
+        }
+
+        public async Task SetupRefOscillatorTest_FM()
+        {
+            //Not implemented, but shouldn't raise an exception
+        }
+
+        public async Task SetupTXPowerTest()
+        {
+            //Not implemented, but shouldn't raise an exception
+        }
+
+        public async Task SetupTXDeviationTest()
+        {
+            //Not implemented, but shouldn't raise an exception
+        }
+
+        public async Task SetupTXP25BERTest()
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task SetupExtendedRXTest()
+        {
+            //Not implemented, but shouldn't raise an exception
+        }
     }
 }
+

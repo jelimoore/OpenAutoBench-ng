@@ -47,6 +47,8 @@ namespace OpenAutoBench_ng.Communication.Radio.Motorola.XCMPRadioBase
             LogCallback(String.Format("Setting up for {0}", name));
             await Instrument.SetDisplay(InstrumentScreen.Generate);
             await Task.Delay(1000);
+            await Instrument.SetupExtendedRXTest();
+            await Task.Delay(1000);
         }
 
         public async Task performTest()
@@ -59,7 +61,7 @@ namespace OpenAutoBench_ng.Communication.Radio.Motorola.XCMPRadioBase
                     Radio.SetRXFrequency(i, false);
                     await Instrument.SetTxFrequency(i);
                     await Task.Delay(5000);
-                    await Instrument.GenerateSignal(-80);
+                    await Instrument.GenerateSignal(-47);
                     await Task.Delay(5000);
                     byte[] rssi = Radio.GetStatus(MotorolaXCMPRadioBase.StatusOperation.RSSI);
                     await Instrument.StopGenerating();
