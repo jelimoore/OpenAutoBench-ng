@@ -155,12 +155,6 @@ namespace OpenAutoBench_ng.Communication.Instrument.Astronics_R8000
             await Task.Delay(5000);
         }
 
-        public async Task SetupFiltersForDeviation()
-        {
-            //await Transmit("AFAN:FILT1 '<20Hz HPF'");
-            //await Transmit("AFAN:FILT2 '15kHz LPF'");
-        }
-
         public async Task<float> MeasureP25RxBer()
         {
             await Send("GO SYSTEM:P25");
@@ -180,5 +174,36 @@ namespace OpenAutoBench_ng.Communication.Instrument.Astronics_R8000
             await Task.Delay(5000);
             await Send("SET P25:BER Test=Start");
         }
+
+        public async Task SetupRefOscillatorTest_P25()
+        {
+            //Not implemented, but shouldn't raise an exception
+        }
+
+        public async Task SetupRefOscillatorTest_FM()
+        {
+            //Not implemented, but shouldn't raise an exception
+        }
+
+        public async Task SetupTXPowerTest()
+        {
+            //Not implemented, but shouldn't raise an exception
+        }
+
+        public async Task SetupTXDeviationTest()
+        {
+            //Not implemented, but shouldn't raise an exception
+        }
+
+        public async Task SetupTXP25BERTest()
+        {
+            //Not implemented, but shouldn't raise an exception
+        }
+
+        public async Task SetupExtendedRXTest()
+        {
+            //Not implemented, but shouldn't raise an exception
+        }
     }
 }
+

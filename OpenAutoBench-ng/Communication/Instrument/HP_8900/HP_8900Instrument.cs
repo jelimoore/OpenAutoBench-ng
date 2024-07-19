@@ -126,12 +126,6 @@ namespace OpenAutoBench_ng.Communication.Instrument.HP_8900
             }
         }
 
-        public async Task SetupFiltersForDeviation()
-        {
-            await Transmit("AFAN:FILT1 '<20Hz HPF'");
-            await Transmit("AFAN:FILT2 '15kHz LPF'");
-        }
-
         public Task<float> MeasureP25RxBer()
         {
             throw new NotImplementedException("HP 8900 does not support digital tests.");
@@ -150,6 +144,38 @@ namespace OpenAutoBench_ng.Communication.Instrument.HP_8900
         public Task ResetBERErrors()
         {
             throw new NotImplementedException();
+        }
+
+        public async Task SetupRefOscillatorTest_P25()
+        {
+           //Not implemented, but shouldn't raise an exception
+        }
+
+        public async Task SetupRefOscillatorTest_FM()
+        {
+            //Not implemented, but shouldn't raise an exception
+        }
+
+        public async Task SetupTXPowerTest()
+        {
+            //Not implemented, but shouldn't raise an exception
+        }
+
+        public async Task SetupTXDeviationTest()
+        {
+            //Partially implemented, the filters are being set-up, but other settings may need to be added.
+            await Transmit("AFAN:FILT1 '<20Hz HPF'");
+            await Transmit("AFAN:FILT2 '15kHz LPF'");
+        }
+
+        public async Task SetupTXP25BERTest()
+        {
+            throw new NotImplementedException("HP 8900 does not support digital tests.");
+        }
+
+        public async Task SetupExtendedRXTest()
+        {
+            //Not implemented, but shouldn't raise an exception
         }
     }
 }

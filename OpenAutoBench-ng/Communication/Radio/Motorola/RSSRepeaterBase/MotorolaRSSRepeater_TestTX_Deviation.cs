@@ -39,7 +39,9 @@ namespace OpenAutoBench_ng.Communication.Radio.Motorola.RSSRepeaterBase
         public async Task setup()
         {
             await Instrument.SetDisplay(InstrumentScreen.Monitor);
-            await Instrument.SetupFiltersForDeviation();
+            await Task.Delay(1000);
+            await Instrument.SetupTXDeviationTest();
+            await Task.Delay(1000);
         }
 
         public async Task performTest()

@@ -44,7 +44,8 @@ namespace OpenAutoBench_ng.Communication.Radio.Motorola.XCMPRadioBase
         {
             LogCallback(String.Format("Setting up for {0}", name));
             await Instrument.SetDisplay(InstrumentScreen.Monitor);
-            await Instrument.SetupFiltersForDeviation();
+            await Task.Delay(1000);
+            await Instrument.SetupTXDeviationTest();
             await Task.Delay(1000);
         }
 
@@ -60,7 +61,7 @@ namespace OpenAutoBench_ng.Communication.Radio.Motorola.XCMPRadioBase
                     // low tone
                     Radio.SetTransmitConfig(XCMPRadioTransmitOption.DEVIATION_LOW);
                     Radio.Keyup();
-                    await Task.Delay(5000);
+                    await Task.Delay(10000);
                     float measDevLow = await Instrument.MeasureFMDeviation();
                     measDevLow = (float)Math.Round(measDevLow);
                     LogCallback(String.Format("TX Deviation Point at {0}MHz (low tone): {1}hz", (currFreq / 1000000F), measDevLow));
@@ -70,7 +71,7 @@ namespace OpenAutoBench_ng.Communication.Radio.Motorola.XCMPRadioBase
                     // high tone
                     Radio.SetTransmitConfig(XCMPRadioTransmitOption.DEVIATION_HIGH);
                     Radio.Keyup();
-                    await Task.Delay(5000);
+                    await Task.Delay(10000);
                     float measDevHigh = await Instrument.MeasureFMDeviation();
                     measDevHigh = (float)Math.Round(measDevHigh);
                     LogCallback(String.Format("TX Deviation Point at {0}MHz (high tone): {1}hz", (currFreq / 1000000F), measDevHigh));

@@ -109,12 +109,6 @@ namespace OpenAutoBench_ng.Communication.Instrument.Viavi_8800SX
             //await Transmit("DISP " + displayName);
         }
 
-        public async Task SetupFiltersForDeviation()
-        {
-            //await Transmit("AFAN:FILT1 '<20Hz HPF'");
-            //await Transmit("AFAN:FILT2 '15kHz LPF'");
-        }
-
         public async Task<float> MeasureP25RxBer()
         {
             throw new NotImplementedException();
@@ -132,6 +126,36 @@ namespace OpenAutoBench_ng.Communication.Instrument.Viavi_8800SX
         {
             throw new NotImplementedException();
             //await Send("Ber RESETERRors");
+        }
+
+        public async Task SetupRefOscillatorTest_P25()
+        {
+            //Not implemented, but shouldn't raise an exception
+        }
+
+        public async Task SetupRefOscillatorTest_FM()
+        {
+            //Not implemented, but shouldn't raise an exception
+        }
+
+        public async Task SetupTXPowerTest()
+        {
+            //Not implemented, but shouldn't raise an exception
+        }
+
+        public async Task SetupTXDeviationTest()
+        {
+            //Not implemented, but shouldn't raise an exception
+        }
+
+        public async Task SetupTXP25BERTest()
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task SetupExtendedRXTest()
+        {
+            //Not implemented, but shouldn't raise an exception
         }
     }
 }
